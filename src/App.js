@@ -3,15 +3,14 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./Component/Navbar";
 import Sidebar from "./Component/Sidebar";
-import Product from "./Component/Product";
 
 function App() {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Navbar />}></Route>
+        <Route path="/" element={<Sidebar />}></Route>
+        <Route path="/product" element={<Sidebar />}></Route>
       </Routes>
-      <Sidebar />
     </div>
   );
 }
