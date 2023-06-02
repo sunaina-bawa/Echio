@@ -9,7 +9,6 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Sidebar />}></Route>
-        <Route path="/product" element={<Sidebar />}></Route>
       </Routes>
     </div>
   );

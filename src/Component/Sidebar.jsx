@@ -139,7 +139,6 @@ export default function Sidebar() {
       <Navbar />
 
       <div style={{ display: "flex", margin: "30px" }}>
-      
         <div
           style={{
             background: "white",
