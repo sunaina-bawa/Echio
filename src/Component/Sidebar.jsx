@@ -205,8 +205,8 @@ export default function Sidebar() {
                 <input
                   type="checkbox"
                   name="categories"
-                  value="jewelry"
-                  checked={categories.includes("jewelry")}
+                  value="jewelery" // Change the value to "jewelery"
+                  checked={categories.includes("jewelery")} // Update the category name
                   onChange={handleCategoryChange}
                 />
                 Jewelry

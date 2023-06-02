@@ -24,7 +24,15 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
-      <div className="auth-buttons">
+      <div
+        className="auth-buttons"
+        style={{
+          margin: "auto",
+          width: "30%",
+          marginTop: "12px",
+          padding: "20px",
+        }}
+      >
         <button className="login-button">Login</button>
         <button className="signup-button">Signup</button>
       </div>
