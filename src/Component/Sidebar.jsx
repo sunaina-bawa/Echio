@@ -7,7 +7,7 @@ export default function Sidebar() {
   const [search, setSearch] = useState("");
   const [gender, setGender] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [sortBy, setSortBy] = useState(""); // Sorting option: "priceHighToLow" or "priceLowToHigh"
+  const [sortBy, setSortBy] = useState("");
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
@@ -91,7 +91,47 @@ export default function Sidebar() {
   const sortedProducts = applySorting(filteredProducts);
 
   const addToCart = (item) => {
-    setCartItems([...cartItems, item]);
+    const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
+    if (existingItem) {
+      // If item already exists in cart, update its quantity
+      const updatedCartItems = cartItems.map((cartItem) => {
+        if (cartItem.id === item.id) {
+          return { ...cartItem, quantity: cartItem.quantity + 1 };
+        }
+        return cartItem;
+      });
+      setCartItems(updatedCartItems);
+    } else {
+      // If item doesn't exist in cart, add it with quantity 1
+      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+    }
+  };
+
+  const handleIncreaseQuantity = (itemId) => {
+    const updatedCartItems = cartItems.map((cartItem) => {
+      if (cartItem.id === itemId) {
+        return { ...cartItem, quantity: cartItem.quantity + 1 };
+      }
+      return cartItem;
+    });
+    setCartItems(updatedCartItems);
+  };
+
+  const handleDecreaseQuantity = (itemId) => {
+    const updatedCartItems = cartItems
+      .map((cartItem) => {
+        if (cartItem.id === itemId) {
+          const newQuantity = cartItem.quantity - 1;
+          if (newQuantity <= 0) {
+            return null; // Remove the item from the cart
+          } else {
+            return { ...cartItem, quantity: newQuantity };
+          }
+        }
+        return cartItem;
+      })
+      .filter(Boolean); // Remove null items from the list
+    setCartItems(updatedCartItems);
   };
 
   return (
@@ -99,6 +139,7 @@ export default function Sidebar() {
       <Navbar />
 
       <div style={{ display: "flex", margin: "30px" }}>
+      
         <div
           style={{
             background: "white",
@@ -108,7 +149,9 @@ export default function Sidebar() {
             boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.24)",
           }}
         >
+          {/* Filter options */}
           <div style={{ display: "flex", flexDirection: "column" }}>
+            {/* Gender filter */}
             <h3 style={{ fontWeight: "bold", marginBottom: "10px" }}>
               Filter by Gender
             </h3>
@@ -133,6 +176,8 @@ export default function Sidebar() {
               Women's Clothing
             </label>
             <hr style={{ margin: "20px 0" }} />
+
+            {/* Category filter */}
             <div style={{ display: "flex", flexDirection: "column" }}>
               <h3 style={{ fontWeight: "bold", marginBottom: "10px" }}>
                 CATEGORIES
@@ -161,8 +206,8 @@ export default function Sidebar() {
                 <input
                   type="checkbox"
                   name="categories"
-                  value="jewelery"
-                  checked={categories.includes("jewelery")}
+                  value="jewelry"
+                  checked={categories.includes("jewelry")}
                   onChange={handleCategoryChange}
                 />
                 Jewelry
@@ -170,6 +215,8 @@ export default function Sidebar() {
             </div>
           </div>
         </div>
+
+        {/* Product List */}
         <div
           style={{
             width: "70%",
@@ -179,24 +226,35 @@ export default function Sidebar() {
           }}
         >
           <h1>Products</h1>
+          {/* Search and Sort */}
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
               type="text"
               placeholder="Search..."
               value={search}
               onChange={handleSearch}
-              style={{ marginRight: "10px", padding: "5px" }}
+              style={{
+                marginRight: "10px",
+                padding: "5px",
+                border: "1px solid gray",
+                borderRadius: "5px",
+              }}
             />
             <select
               value={sortBy}
               onChange={handleSortByChange}
-              style={{ padding: "5px" }}
+              style={{
+                padding: "5px",
+                border: "1px solid gray",
+                borderRadius: "5px",
+              }}
             >
               <option value="">Sort By</option>
               <option value="priceHighToLow">Price: High to Low</option>
               <option value="priceLowToHigh">Price: Low to High</option>
             </select>
           </div>
+          {/* Product Cards */}
           <div
             style={{
               display: "flex",
@@ -214,7 +272,7 @@ export default function Sidebar() {
                 <div
                   key={item.id}
                   style={{
-                    background: "white",
+                    background: "#f9f9f9",
                     padding: "10px",
                     borderRadius: "5px",
                     width: "100%",
@@ -236,13 +294,35 @@ export default function Sidebar() {
                       Price: ${item.price}
                     </p>
                   </div>
-                  <button onClick={() => addToCart(item)}>Add to Cart</button>
+                  <div>
+                    {/* Quantity */}
+                    <button
+                      onClick={() => addToCart(item)}
+                      style={{
+                        padding: "8px 12px",
+                        background: "gray",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               ))
             )}
           </div>
         </div>
-        <Cart cartItems={cartItems} />
+
+        {/* Cart */}
+        <Cart
+          cartItems={cartItems}
+          setCartItems={setCartItems}
+          handleIncreaseQuantity={handleIncreaseQuantity}
+          handleDecreaseQuantity={handleDecreaseQuantity}
+        />
       </div>
     </>
   );
